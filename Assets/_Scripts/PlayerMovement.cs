@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
             
         }
         SpeedControl();
-        Debug.Log(IsGrounded());
+       
      
     }
 
@@ -51,8 +51,10 @@ public class PlayerMovement : MonoBehaviour
         playerDirection = transform.forward * inputs.Player.Move.ReadValue<Vector3>().z + transform.right * inputs.Player.Move.ReadValue<Vector3>().x;
 
         // Walking
-        
-        playerRb.AddForce(playerDirection.normalized * moveSpeed, ForceMode.Force);
+        if (IsGrounded())
+        {
+            playerRb.AddForce(playerDirection.normalized * moveSpeed, ForceMode.Force);
+        }
         
     }
 
@@ -72,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         bool isGrounded = Physics.Raycast(transform.position, -Vector3.up, out hit, rayDistance, groundLayer);
         Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.yellow);
+        Debug.Log(hit.collider.name);
 
         if (isGrounded)
         {
@@ -82,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return false;
         }
+
     }
 
     public void CanMove(InputAction.CallbackContext context)
