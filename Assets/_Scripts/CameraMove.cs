@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraMove : MonoBehaviour
 {
@@ -13,12 +14,17 @@ public class CameraMove : MonoBehaviour
     }
     void Update()
     {
-        float MouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY * Time.deltaTime;
-        float MouseX = Input.GetAxis("Mouse X") * mouseSensitivityX * Time.deltaTime;
 
-        xRotation -= MouseY;
-        transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        player.Rotate(Vector3.up * MouseX);
+        if (Mouse.current != null) 
+        {
+            float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivityY * Time.deltaTime;
+            float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivityX * Time.deltaTime;
+            xRotation -= mouseY;
+            transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            player.Rotate(Vector3.up * mouseX);
+
+        }
+
     }
 }

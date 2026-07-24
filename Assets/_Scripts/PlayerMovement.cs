@@ -74,7 +74,6 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         bool isGrounded = Physics.Raycast(transform.position, -Vector3.up, out hit, rayDistance, groundLayer);
         Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.yellow);
-        Debug.Log(hit.collider.name);
 
         if (isGrounded)
         {
