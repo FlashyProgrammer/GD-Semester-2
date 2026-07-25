@@ -4,23 +4,34 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerControls inputs;
-    private Vector3 playerDirection;
-    private Rigidbody playerRb;
+    private CharacterController player;
+
     private bool isMoving;
+    private bool isSprinting;
+    private bool isCrouching;
+    private int crouchCounter;
+    private float playerHeight;
+    private Vector3 playerDirection;
+    private Vector3 playerVelocity;
 
     [Header("Movement Parameters")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float sprintSpeed = 10f;
+    [SerializeField] private float crouchSpeed = 3.0f;
+    [SerializeField] private float crouchHeight = 0.5f;
+    [SerializeField] private float playerFriction = 2.0f;
+    [SerializeField] private float playerGravity = -9.8f;
 
 
     [Header("Ground Parameters")]
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask groundLayer;
 
-
     private void Awake()
     {
         inputs = new PlayerControls();
-        playerRb = GetComponent<Rigidbody>();
+        player = GetComponent<CharacterController>();
+        playerHeight = player.height;
 
     }
 
@@ -33,17 +44,21 @@ public class PlayerMovement : MonoBehaviour
         inputs.Disable();
     }
 
-
-    private void FixedUpdate()
+    private void Update()
     {
         if (isMoving)
         {
             Movement();
             
         }
-        SpeedControl();
-       
-     
+        else
+        {
+            playerVelocity = Vector3.Lerp(playerVelocity, Vector3.zero, playerFriction * Time.deltaTime);
+        }
+
+        playerVelocity.y += playerGravity * Time.deltaTime;
+        player.Move(playerVelocity);
+         
     }
 
     private void Movement()
@@ -51,40 +66,22 @@ public class PlayerMovement : MonoBehaviour
         playerDirection = transform.forward * inputs.Player.Move.ReadValue<Vector3>().z + transform.right * inputs.Player.Move.ReadValue<Vector3>().x;
 
         // Walking
-        if (IsGrounded())
+        if (player.isGrounded && !isSprinting)
         {
-            playerRb.AddForce(playerDirection.normalized * moveSpeed, ForceMode.Force);
+            playerVelocity = playerDirection * moveSpeed * Time.deltaTime;
+         
         }
-        
-    }
-
-    private void SpeedControl()
-    {
-        Vector3 currentVelocity = new Vector3(playerRb.linearVelocity.x, 0f, playerRb.linearVelocity.z);
-
-        if (currentVelocity.magnitude > moveSpeed)
+        // Sprinting
+        if (player.isGrounded && isSprinting)
         {
-            Vector3 limitedVelocity = currentVelocity.normalized * moveSpeed;
-            playerRb.linearVelocity = new Vector3(limitedVelocity.x, playerRb.linearVelocity.y, limitedVelocity.z);
+            playerVelocity = playerDirection * sprintSpeed * Time.deltaTime;
+
         }
-    }
-
-    private bool IsGrounded()
-    {
-        RaycastHit hit;
-        bool isGrounded = Physics.Raycast(transform.position, -Vector3.up, out hit, rayDistance, groundLayer);
-        Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.yellow);
-
-        if (isGrounded)
+        // Crouching
+        if(player.isGrounded && isCrouching)
         {
-            return true;
+            playerVelocity = playerDirection * crouchSpeed * Time.deltaTime;
         }
-
-        else
-        {
-            return false;
-        }
-
     }
 
     public void CanMove(InputAction.CallbackContext context)
@@ -98,8 +95,45 @@ public class PlayerMovement : MonoBehaviour
         if (context.canceled)
         {
             isMoving = false;
-         
+
         }
 
+    }
+    public void CanSprint(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isSprinting = true;
+        }
+
+        if (context.canceled)
+        {
+            isSprinting = false;
+
+        }
+
+    }
+
+    public void CanCrouch(InputAction.CallbackContext context)
+    {
+        if (context.performed && crouchCounter == 0)
+        {
+            isCrouching = true;
+            player.height = crouchHeight;
+            crouchCounter++;
+
+        }
+
+        if (context.canceled && crouchCounter == 1)
+        {
+            crouchCounter++;
+        }
+
+        if(context.performed && crouchCounter == 2)
+        {
+            isCrouching = false;
+            isMoving = true; player.height = playerHeight;
+            crouchCounter = 0;
+        }
     }
 }
