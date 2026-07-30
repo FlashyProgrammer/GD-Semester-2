@@ -32,7 +32,10 @@ public class PlayerInteraction : MonoBehaviour
         {
             currentInteractable = hit.collider.gameObject;
         }
-
+        else
+        {
+            currentInteractable = null;
+        }
         Debug.DrawRay(camRay.origin, camRay.direction * rayDistance, Color.yellow);
     }
 
@@ -40,6 +43,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (currentInteractable != null)
         {
+          
             if (currentInteractable.CompareTag("Radar") && interactPressed)
             {
                 currentInteractable.GetComponent<Radar>().showRadar();
@@ -50,8 +54,7 @@ public class PlayerInteraction : MonoBehaviour
             {
                 currentInteractable.GetComponent<Radar>().hideRadar();
                 mouseLook.enabled = true;
-                player.enabled = true;
-                currentInteractable = null; 
+                player.enabled = true; 
             }
         }
     }
@@ -59,14 +62,14 @@ public class PlayerInteraction : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (context.performed && player.enabled == true)
+        if (context.performed && currentInteractable != null)
         {
             interactPressed = true;
+           
         }
 
         if(context.performed && player.enabled == false)
         {
-        
             interactPressed = false;
         }
 
