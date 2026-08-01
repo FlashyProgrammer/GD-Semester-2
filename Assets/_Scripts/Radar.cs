@@ -16,7 +16,6 @@ public class Radar : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(spawnCounter);
         if (spawnCounter > 0 && radarOnScreen)
         {
             spawnCounter -= Time.deltaTime;
