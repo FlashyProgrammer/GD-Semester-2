@@ -4,49 +4,129 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Enemy Spawning Settings")]
+    [Header("Enemy Spawn Settings")]
     [SerializeField] private GameObject enemyOne;
     [SerializeField] private GameObject enemyTwo;
     [SerializeField] private List<RectTransform> spawnPoints;
     [SerializeField] private float spawnRateEnemyOne;
     [SerializeField] private float spawnRateEnemyTwo;
+    [SerializeField] private int maxToSpawn;
     
     [Header("Movement Ring Points")]
-    [SerializeField] private List<RectTransform> ringZero;
-    [SerializeField] private List<RectTransform> ringTwo;
-    [SerializeField] private List<RectTransform> ringThree;
-    [SerializeField] private List<RectTransform> ringFour;
+    [SerializeField] private List<RectTransform> pathOne;
+    [SerializeField] private List<RectTransform> pathTwo;
+    [SerializeField] private List<RectTransform> pathThree;
+    [SerializeField] private List<RectTransform> pathFour;
+    [SerializeField] private List<RectTransform> pathFive;
+    [SerializeField] private List<RectTransform> pathSix;
+    [SerializeField] private List<RectTransform> pathSeven;
+    [SerializeField] private List<RectTransform> pathEight;
 
+
+    public List<GameObject>activeEnemies;
+
+    private GameObject spawnedEnemy;
+    private RectTransform spawnPoint;
     private int randomIndex;
+    private int numberSpawned;
+
+
+    private void Update()
+    {
+       EnemyOverlapCheck();
+    }
 
     public IEnumerator EnemyOneSpawn()
     {
-       
         yield return new WaitForSeconds(spawnRateEnemyOne);
 
-        if(spawnPoints.Count > 0)
+        if (spawnPoints.Count != 0 && numberSpawned < maxToSpawn)
         {
             randomIndex = Random.Range(0, spawnPoints.Count);
-           
-        }
+            numberSpawned++;
 
-        if (spawnPoints.Count != 0)
-        {
-            var spawnPoint = spawnPoints[randomIndex];
-            spawnPoints.RemoveAt(randomIndex);
-            var spawnedEnemy = Instantiate(enemyOne, spawnPoint.anchoredPosition, Quaternion.identity);
+            spawnPoint = spawnPoints[randomIndex];
+            spawnedEnemy = Instantiate(enemyOne, spawnPoint.anchoredPosition, Quaternion.identity);
+            activeEnemies.Add(spawnedEnemy);
             spawnedEnemy.transform.SetParent(spawnPoint, false);
-
             spawnedEnemy.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            
+            switch (randomIndex)
+            {
+                case 0:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathOne;
+                    break;
+                case 1:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathTwo;
+                    break;
+                case 2:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathThree;
+                    break;
+                case 3:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathFour;
+                    break;
+                case 4:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathFive;
+                    break;
+                case 5:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathSix;
+                    break;
+                case 6:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathSeven;
+                    break;
+                case 7:
+                    spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathEight;
+                    break;
 
-            spawnedEnemy.GetComponent<RadarEnemy>().moveRingZero = ringZero;
-            spawnedEnemy.GetComponent<RadarEnemy>().moveRingOne = ringTwo;
-            spawnedEnemy.GetComponent<RadarEnemy>().moveRingTwo = ringThree;
-            spawnedEnemy.GetComponent<RadarEnemy>().moveRingThree = ringFour;
+            }
 
         }
-      
-      
 
     }
+
+    private void EnemyOverlapCheck()
+    {
+        if (spawnPoint && spawnedEnemy != null)
+        {
+            while (spawnedEnemy.GetComponent<RadarEnemy>().enemyOverlap)
+            {
+                randomIndex = Random.Range(0, spawnPoints.Count);
+                spawnPoint = spawnPoints[randomIndex];
+                spawnedEnemy.GetComponent<RectTransform>().position = spawnPoint.position;
+                spawnedEnemy.transform.SetParent(spawnPoint);
+
+                switch (randomIndex)
+                {
+                    case 0:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathOne;
+                        break;
+                    case 1:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathTwo;
+                        break;
+                    case 2:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathThree;
+                        break;
+                    case 3:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathFour;
+                        break;
+                    case 4:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathFive;
+                        break;
+                    case 5:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathSix;
+                        break;
+                    case 6:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathSeven;
+                        break;
+                    case 7:
+                        spawnedEnemy.GetComponent<RadarEnemy>().movePath = pathEight;
+                        break;
+                }
+
+                break;
+            }
+        }
+    }
+
+ 
 }

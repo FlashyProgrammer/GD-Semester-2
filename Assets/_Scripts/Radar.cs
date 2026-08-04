@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Radar : MonoBehaviour
 {
-    [SerializeField] private GameObject radarToShow;
+    [SerializeField] private Image[] radarToShow;
     [SerializeField] private EnemySpawner spawner;
     [SerializeField] private float spawnTimer;
 
@@ -16,11 +18,11 @@ public class Radar : MonoBehaviour
     }
     private void Update()
     {
-        if (spawnCounter > 0 && radarOnScreen)
+        if (spawnCounter > 0 && spawner != null)
         {
             spawnCounter -= Time.deltaTime;
         }
-
+ 
         else if (spawnCounter < 0)
         {
             if (spawner != null)
@@ -31,23 +33,45 @@ public class Radar : MonoBehaviour
 
         }
 
+        if (!radarOnScreen && spawner != null)
+        {
+            foreach (var enemy in spawner.activeEnemies)
+            {
+                enemy.GetComponent<Image>().enabled = false;
+            }
+        }
+
+        if (radarOnScreen && spawner != null)
+        {
+            foreach (var enemy in spawner.activeEnemies)
+            {
+                enemy.GetComponent<Image>().enabled = true;
+            }
+        }
     }
     public void showRadar() 
     {
         if (!radarOnScreen)
         {
-            radarToShow.SetActive(true);
+            foreach (var image in radarToShow)
+            {
+                image.enabled = true;
+            }
+            
             radarOnScreen = true;
+
         }
-       
-             
     }
 
     public void hideRadar()
     {
         if (radarOnScreen)
         {
-            radarToShow.SetActive(false);
+            foreach (var image in radarToShow)
+            {
+                image.enabled = false;
+            }
+          
             radarOnScreen = false;
         }
     }
