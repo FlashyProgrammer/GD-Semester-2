@@ -56,6 +56,23 @@ public class PlayerInteraction : MonoBehaviour
                 mouseLook.enabled = true;
                 player.enabled = true; 
             }
+
+            if(currentInteractable.CompareTag("Placement Point") && interactPressed)
+            {
+                currentInteractable.GetComponent<TrapManager>().selectionScreen.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                mouseLook.enabled = false;
+                player.enabled = false;
+            }
+
+            else if(currentInteractable.CompareTag("Placement Point") && !interactPressed)
+            {
+                currentInteractable.GetComponent<TrapManager>().selectionScreen.SetActive(false);
+                currentInteractable.GetComponent<TrapManager>().HideRadar();
+                Cursor.lockState = CursorLockMode.Locked;
+                mouseLook.enabled = true;
+                player.enabled = true;
+            }
         }
     }
 

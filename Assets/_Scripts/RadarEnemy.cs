@@ -47,6 +47,10 @@ public class RadarEnemy : MonoBehaviour
                     rectTransform.position = movePath[currentPoint].position;
                     rectTransform.SetParent(movePath[currentPoint]);
                 }
+                else 
+                {
+                    currentPoint--;
+                }
             }
             else
             {
