@@ -22,11 +22,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerFriction = 2.0f;
     [SerializeField] private float playerGravity = -9.8f;
 
-
-    [Header("Ground Parameters")]
-    [SerializeField] private float rayDistance;
-    [SerializeField] private LayerMask groundLayer;
-
     private void Awake()
     {
         inputs = new PlayerControls();

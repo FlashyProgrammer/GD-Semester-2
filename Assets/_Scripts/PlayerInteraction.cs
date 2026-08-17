@@ -8,10 +8,18 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private LayerMask interactionLayers;
     [SerializeField] private float rayDistance;
 
+    [SerializeField] private Transform followPoint;
+    [SerializeField] private Transform dropPoint;
+
+    private GameObject handItem;
+    private bool canPlaceItem;
+    private int buttonCounter;
+    private bool itemInHand;
     private GameObject currentInteractable;
     private PlayerMovement player;
     private bool interactPressed;
 
+    private TrapPlacement placementPoint;
 
     private void Awake()
     {
@@ -41,10 +49,19 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ObjectInteractions()
     {
+        if (!interactPressed && itemInHand == true)
+        {
+            itemInHand = false;
+            handItem.transform.parent = null;
+            handItem.transform.position = dropPoint.position;
+            handItem = null;
+
+        }
+
         if (currentInteractable != null)
         {
           
-            if (currentInteractable.CompareTag("Radar") && interactPressed)
+            if (currentInteractable.CompareTag("Radar") && interactPressed && !itemInHand)
             {
                 currentInteractable.GetComponent<Radar>().showRadar();
                 mouseLook.enabled = false;
@@ -57,38 +74,58 @@ public class PlayerInteraction : MonoBehaviour
                 player.enabled = true; 
             }
 
-            if(currentInteractable.CompareTag("Placement Point") && interactPressed)
+
+            if (currentInteractable.CompareTag("Trap") && interactPressed && !itemInHand)
             {
-                currentInteractable.GetComponent<TrapManager>().selectionScreen.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                mouseLook.enabled = false;
-                player.enabled = false;
+                itemInHand = true;
+                currentInteractable.transform.parent = followPoint;
+                currentInteractable.transform.position = followPoint.position;
+                handItem = currentInteractable;
+                handItem.GetComponent<Collider>().isTrigger = false;
             }
 
-            else if(currentInteractable.CompareTag("Placement Point") && !interactPressed)
+            if (currentInteractable.CompareTag("Placement Point") && handItem != null)
             {
-                currentInteractable.GetComponent<TrapManager>().selectionScreen.SetActive(false);
-                currentInteractable.GetComponent<TrapManager>().HideRadar();
-                Cursor.lockState = CursorLockMode.Locked;
-                mouseLook.enabled = true;
-                player.enabled = true;
+                canPlaceItem = true;
+                placementPoint = currentInteractable.GetComponent<TrapPlacement>();
+            }
+
+            else
+            {
+                canPlaceItem = false;
             }
         }
     }
 
-
     public void Interact(InputAction.CallbackContext context)
     {
-        if (context.performed && currentInteractable != null)
+        if (context.performed && currentInteractable != null && buttonCounter == 0)
         {
             interactPressed = true;
+            buttonCounter++;
            
         }
 
-        if(context.performed && player.enabled == false)
+        if (context.canceled && buttonCounter == 1)
         {
-            interactPressed = false;
+            buttonCounter++;
         }
 
+        if (context.performed && buttonCounter == 2)
+        {
+            if (canPlaceItem)
+            {
+                placementPoint.SpawnTrap();
+            }
+
+            interactPressed = false;
+            buttonCounter = 0;
+
+        }
+
+    }
+    public GameObject CheckItem()
+    {
+        return handItem;
     }
 }

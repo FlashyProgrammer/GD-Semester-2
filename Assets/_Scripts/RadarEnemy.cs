@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class RadarEnemy : MonoBehaviour
@@ -12,7 +11,7 @@ public class RadarEnemy : MonoBehaviour
     [Header("Movement Ring Points")]
     public List<RectTransform> movePath;
 
-    public bool enemyOverlap;
+    private bool enemyOverlap;
     private int currentPoint;
     private RectTransform rectTransform;
     private float randomFloat;
@@ -39,7 +38,6 @@ public class RadarEnemy : MonoBehaviour
 
             if (randomFloat <= enemyMoveChance/100)
             {
-                Debug.Log("Enemy Moves Forward");
 
                 if (currentPoint < movePath.Count)
                 {
@@ -80,6 +78,12 @@ public class RadarEnemy : MonoBehaviour
         {
             enemyOverlap = false;
         }
+    }
+
+
+    public bool IsOverlapped()
+    {
+        return enemyOverlap;
     }
 
 }

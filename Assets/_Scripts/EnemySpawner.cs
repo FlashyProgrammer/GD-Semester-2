@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -23,8 +24,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<RectTransform> pathEight;
 
 
-    public List<GameObject>activeEnemies;
-
+    [HideInInspector] public List<GameObject>activeEnemies;
     private GameObject spawnedEnemy;
     private RectTransform spawnPoint;
     private int randomIndex;
@@ -87,7 +87,7 @@ public class EnemySpawner : MonoBehaviour
     {
         if (spawnPoint && spawnedEnemy != null)
         {
-            while (spawnedEnemy.GetComponent<RadarEnemy>().enemyOverlap)
+            while (spawnedEnemy.GetComponent<RadarEnemy>().IsOverlapped())
             {
                 randomIndex = Random.Range(0, spawnPoints.Count);
                 spawnPoint = spawnPoints[randomIndex];

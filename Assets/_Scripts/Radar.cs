@@ -7,6 +7,8 @@ public class Radar : MonoBehaviour
     [SerializeField] private Image[] radarToShow;
     [SerializeField] private EnemySpawner spawner;
     [SerializeField] private float spawnTimer;
+    [SerializeField] private TrapPlacement trapPlacement;
+
 
     private float spawnCounter;
     private bool radarOnScreen;
@@ -39,7 +41,17 @@ public class Radar : MonoBehaviour
             {
                 enemy.GetComponent<Image>().enabled = false;
             }
+
+            if (trapPlacement.GetActiveTraps() != null)
+            {
+                foreach (var activeTrap in trapPlacement.GetActiveTraps())
+                {
+                    activeTrap.GetComponent<Image>().enabled = false;
+                }
+            }
+           
         }
+
 
         if (radarOnScreen && spawner != null)
         {
@@ -47,6 +59,15 @@ public class Radar : MonoBehaviour
             {
                 enemy.GetComponent<Image>().enabled = true;
             }
+
+            if (trapPlacement.GetActiveTraps() != null)
+            {
+                foreach (var activeTrap in trapPlacement.GetActiveTraps())
+                {
+                    activeTrap.GetComponent<Image>().enabled = true;
+                }
+            }
+
         }
     }
     public void showRadar() 
