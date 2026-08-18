@@ -11,6 +11,9 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Transform followPoint;
     [SerializeField] private Transform dropPoint;
 
+    [Header("Inventory Management")]
+    [SerializeField] private InventorySystem inventory;
+
     private GameObject handItem;
     private bool canPlaceItem;
     private int buttonCounter;
@@ -75,13 +78,14 @@ public class PlayerInteraction : MonoBehaviour
             }
 
 
-            if (currentInteractable.CompareTag("Trap") && interactPressed && !itemInHand)
+            if (currentInteractable.CompareTag("Item") && interactPressed && !itemInHand)
             {
                 itemInHand = true;
                 currentInteractable.transform.parent = followPoint;
                 currentInteractable.transform.position = followPoint.position;
                 handItem = currentInteractable;
                 handItem.GetComponent<Collider>().isTrigger = false;
+                inventory.AddItem(currentInteractable);
             }
 
             if (currentInteractable.CompareTag("Placement Point") && handItem != null)
@@ -124,8 +128,13 @@ public class PlayerInteraction : MonoBehaviour
         }
 
     }
-    public GameObject CheckItem()
+    public GameObject GetItem()
     {
         return handItem;
+    }
+
+    public void SetItem(GameObject item)
+    {
+        handItem = item;
     }
 }

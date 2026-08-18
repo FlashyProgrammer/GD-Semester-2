@@ -7,9 +7,8 @@ TagManager:
   - Radar
   - Enemy
   - Placement Point
-  - Pick Up
   - Trap
-  - Tailsman
+  - Item
   layers:
   - Default
   - TransparentFX
