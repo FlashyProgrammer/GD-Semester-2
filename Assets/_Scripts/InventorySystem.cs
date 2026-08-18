@@ -1,6 +1,6 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InventorySystem : MonoBehaviour
 {
@@ -11,42 +11,75 @@ public class InventorySystem : MonoBehaviour
 
     private int currentIndex = 0;
 
-    private void Update()
-    {
-        switch (currentIndex)
-        {
-            case 0:
-                playerInteraction.SetItem(currentInventory[0]);
-                break;
-            case 1:
-                playerInteraction.SetItem(currentInventory[1]);
-                break;
-            case 2:
-                playerInteraction.SetItem(currentInventory[2]);
-                break;
-            case 3:
-                playerInteraction.SetItem(currentInventory[3]);
-                break;
-        }
-
-        if(currentIndex >= maxInventorySize)
-        {
-            currentIndex = 0;
-        }   
-    }
-
-    public void nextItem()
-    {
-        currentIndex++;
-
-    }
     public void AddItem(GameObject item)
     {
-        currentInventory.Add(item);
+        currentInventory[currentIndex] = item;
     }
 
     public void RemoveItem(GameObject item)
     {
-        currentInventory.Remove(item);
+        var index = currentInventory.IndexOf(item);
+        currentInventory[index] = null;
+    }
+
+    public void NextItem(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+         
+            if (currentInventory[currentIndex] != null)
+            {
+                playerInteraction.HideItem(currentInventory[currentIndex]);
+            }
+
+            currentIndex++;
+
+            if (currentIndex == maxInventorySize)
+            {
+                currentIndex = currentInventory.Count - 1;
+            }
+         
+
+            if (currentInventory[currentIndex] != null)
+            {
+                playerInteraction.SetItem(currentInventory[currentIndex]);
+
+            }
+            else
+            {
+                playerInteraction.CanPick();
+            }
+        }
+    }
+
+    public void PreviousItem(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (currentInventory[currentIndex] != null)
+            {
+                playerInteraction.HideItem(currentInventory[currentIndex]);
+            }
+
+            currentIndex--;
+
+            if (currentIndex < 0)
+            {
+                currentIndex = 0;
+            }
+
+
+            if (currentInventory[currentIndex] != null)
+            {
+
+                playerInteraction.SetItem(currentInventory[currentIndex]);
+
+            }
+
+            else
+            {
+                playerInteraction.CanPick();
+            }
+        }
     }
 }

@@ -28,13 +28,13 @@ public class TrapPlacement : MonoBehaviour
 
         if (itemProperties.itemName == "Tailsman")
         {
+            Debug.Log("Trap spawned");
             var radarTrap = Instantiate(itemProperties.spritePrefab, radarSpawnPoint.anchoredPosition, Quaternion.identity);
             radarTrap.transform.SetParent(radarSpawnPoint, false);
             Debug.Log(radarTrap);
             activeTraps.Add(radarTrap);
             Instantiate(itemProperties.itemPrefab, groundSpawnPoint.position, Quaternion.identity);
         }
-
         Destroy(currentItem);
     }
 

@@ -43,9 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Cycle",
+                    "name": "Cycle (Right)",
                     "type": "Button",
                     "id": "a13ff3d1-a421-4354-ab9a-d99bcdc084fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cycle (Left)",
+                    "type": "Button",
+                    "id": "dd5851df-4510-4544-a276-112165d8fb33",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -220,45 +229,45 @@
                 },
                 {
                     "name": "",
-                    "id": "b6d8d93c-8f21-48d6-ba95-f115e6ef18d3",
-                    "path": "<Keyboard>/1",
+                    "id": "30e96bac-eb36-4a10-ba01-70a3eba1e4ba",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle",
+                    "action": "Cycle (Right)",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6d28b693-8411-4eed-af22-a3d3c2e3d85d",
-                    "path": "<Keyboard>/2",
+                    "id": "785c6f36-f73a-4805-822f-18e073ba925f",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle",
+                    "action": "Cycle (Right)",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "09ee9634-9b32-432c-ba2c-e52fdfface01",
-                    "path": "<Keyboard>/3",
+                    "id": "2384a67e-2698-492a-9537-5b2ff9f2dac1",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle",
+                    "action": "Cycle (Left)",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "8651bc96-ca09-4b25-85c9-d92e74060ac0",
-                    "path": "<Keyboard>/4",
+                    "id": "ac26d3db-50f1-494d-bb4e-3aca485d7a5d",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle",
+                    "action": "Cycle (Left)",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

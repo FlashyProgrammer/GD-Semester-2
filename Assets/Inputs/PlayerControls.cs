@@ -129,9 +129,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Cycle"",
+                    ""name"": ""Cycle (Right)"",
                     ""type"": ""Button"",
                     ""id"": ""a13ff3d1-a421-4354-ab9a-d99bcdc084fb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cycle (Left)"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd5851df-4510-4544-a276-112165d8fb33"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -306,45 +315,45 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b6d8d93c-8f21-48d6-ba95-f115e6ef18d3"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""id"": ""30e96bac-eb36-4a10-ba01-70a3eba1e4ba"",
+                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle"",
+                    ""action"": ""Cycle (Right)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6d28b693-8411-4eed-af22-a3d3c2e3d85d"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""id"": ""785c6f36-f73a-4805-822f-18e073ba925f"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle"",
+                    ""action"": ""Cycle (Right)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""09ee9634-9b32-432c-ba2c-e52fdfface01"",
-                    ""path"": ""<Keyboard>/3"",
+                    ""id"": ""2384a67e-2698-492a-9537-5b2ff9f2dac1"",
+                    ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle"",
+                    ""action"": ""Cycle (Left)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8651bc96-ca09-4b25-85c9-d92e74060ac0"",
-                    ""path"": ""<Keyboard>/4"",
+                    ""id"": ""ac26d3db-50f1-494d-bb4e-3aca485d7a5d"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle"",
+                    ""action"": ""Cycle (Left)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -359,7 +368,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Cycle = m_Player.FindAction("Cycle", throwIfNotFound: true);
+        m_Player_CycleRight = m_Player.FindAction("Cycle (Right)", throwIfNotFound: true);
+        m_Player_CycleLeft = m_Player.FindAction("Cycle (Left)", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -444,7 +454,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Cycle;
+    private readonly InputAction m_Player_CycleRight;
+    private readonly InputAction m_Player_CycleLeft;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -473,9 +484,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Cycle".
+        /// Provides access to the underlying input action "Player/CycleRight".
         /// </summary>
-        public InputAction @Cycle => m_Wrapper.m_Player_Cycle;
+        public InputAction @CycleRight => m_Wrapper.m_Player_CycleRight;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CycleLeft".
+        /// </summary>
+        public InputAction @CycleLeft => m_Wrapper.m_Player_CycleLeft;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -514,9 +529,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Cycle.started += instance.OnCycle;
-            @Cycle.performed += instance.OnCycle;
-            @Cycle.canceled += instance.OnCycle;
+            @CycleRight.started += instance.OnCycleRight;
+            @CycleRight.performed += instance.OnCycleRight;
+            @CycleRight.canceled += instance.OnCycleRight;
+            @CycleLeft.started += instance.OnCycleLeft;
+            @CycleLeft.performed += instance.OnCycleLeft;
+            @CycleLeft.canceled += instance.OnCycleLeft;
         }
 
         /// <summary>
@@ -540,9 +558,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Cycle.started -= instance.OnCycle;
-            @Cycle.performed -= instance.OnCycle;
-            @Cycle.canceled -= instance.OnCycle;
+            @CycleRight.started -= instance.OnCycleRight;
+            @CycleRight.performed -= instance.OnCycleRight;
+            @CycleRight.canceled -= instance.OnCycleRight;
+            @CycleLeft.started -= instance.OnCycleLeft;
+            @CycleLeft.performed -= instance.OnCycleLeft;
+            @CycleLeft.canceled -= instance.OnCycleLeft;
         }
 
         /// <summary>
@@ -612,11 +633,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Cycle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Cycle (Right)" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCycle(InputAction.CallbackContext context);
+        void OnCycleRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Cycle (Left)" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCycleLeft(InputAction.CallbackContext context);
     }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private Camera playerCam;
@@ -52,14 +51,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ObjectInteractions()
     {
-        if (!interactPressed && itemInHand == true)
-        {
-            itemInHand = false;
-            handItem.transform.parent = null;
-            handItem.transform.position = dropPoint.position;
-            handItem = null;
-
-        }
 
         if (currentInteractable != null)
         {
@@ -85,6 +76,7 @@ public class PlayerInteraction : MonoBehaviour
                 currentInteractable.transform.position = followPoint.position;
                 handItem = currentInteractable;
                 handItem.GetComponent<Collider>().isTrigger = false;
+
                 inventory.AddItem(currentInteractable);
             }
 
@@ -101,6 +93,18 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    private void DropItem()
+    {
+        if (handItem.activeInHierarchy)
+        {
+            itemInHand = false;
+            handItem.transform.parent = null;
+            handItem.transform.position = dropPoint.position;
+            inventory.RemoveItem(handItem);
+            handItem = null;
+
+        }
+    }
     public void Interact(InputAction.CallbackContext context)
     {
         if (context.performed && currentInteractable != null && buttonCounter == 0)
@@ -121,7 +125,7 @@ public class PlayerInteraction : MonoBehaviour
             {
                 placementPoint.SpawnTrap();
             }
-
+            DropItem();
             interactPressed = false;
             buttonCounter = 0;
 
@@ -132,9 +136,23 @@ public class PlayerInteraction : MonoBehaviour
     {
         return handItem;
     }
-
     public void SetItem(GameObject item)
     {
         handItem = item;
+        item.gameObject.SetActive(true);
     }
+
+    public void HideItem(GameObject item)
+    {
+        item.gameObject.SetActive(false);
+    }
+
+    public void CanPick()
+    {
+        itemInHand = false;
+        interactPressed = false;
+        buttonCounter = 0;
+
+    }
+
 }
